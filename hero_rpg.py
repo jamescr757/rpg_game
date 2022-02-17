@@ -1,44 +1,74 @@
-# In this simple RPG game, the hero fights the goblin. He has the options to:
+from characters import *
+from items import Item 
+import random 
 
-# 1. fight goblin
-# 2. do nothing - in which case the goblin will attack him anyway
-# 3. flee
+
+main_menu = """
+What do you want to do?
+1. Fight
+2. Visit Store
+3. Flee"""
+opponents = [Goblin(), Medic(), Shadow(), Zombie()]
+store_items = [Item("Super Tonic", 5), Item("Armor", 5), Item("Evade", 5)]
+
+
+def select_opponent():
+    random_index = random.randint(0, len(opponents) - 1)
+    return opponents[random_index]
+
+def display_store_menu():
+    print("\nStore Items:")
+    for index, item in enumerate(store_items):
+        print(f"{index + 1}. {item.name}: {item.cost} coins")
+    print()
+
+def get_item_index(user_input):
+    try:
+        return int(user_input) - 1
+    except ValueError:
+        print("Thank you for visiting the store.")
+        return len(store_items) 
+     
 
 def main():
-    hero_health = 10
-    hero_power = 5
-    goblin_health = 6
-    goblin_power = 2
+    hero = Hero()
+    opponent = select_opponent()
 
-    while goblin_health > 0 and hero_health > 0:
-        print("You have {} health and {} power.".format(hero_health, hero_power))
-        print("The goblin has {} health and {} power.".format(goblin_health, goblin_power))
-        print()
-        print("What do you want to do?")
-        print("1. fight goblin")
-        print("2. do nothing")
-        print("3. flee")
-        print("> ", end=' ')
-        raw_input = input()
+    while opponent.alive() and hero.alive():
+        hero.print_status()
+        opponent.print_status()
+        print(main_menu)
+        raw_input = input("> ")
         if raw_input == "1":
-            # Hero attacks goblin
-            goblin_health -= hero_power
-            print("You do {} damage to the goblin.".format(hero_power))
-            if goblin_health <= 0:
-                print("The goblin is dead.")
+            hero.attack(opponent)
+            if opponent.health <= 0 and opponent.name != "Zombie":
+                print(f"The {opponent.name} is dead.")
+                hero.collect_bounty(opponent)
         elif raw_input == "2":
-            pass
+            display_store_menu()
+            print(f"You currently have {hero.bounty} coins.")
+            store_input = input("Enter a number to purchase an item. Anything else to leave the store.")
+            item_index = get_item_index(store_input)
+            if item_index < len(store_items):
+                item = store_items[item_index]
+                if hero.bounty >= item.cost:
+                    print(f"You have purchased {item.name} for {item.cost} coins.")
+                    hero.bounty -= item.cost
+                    print(f"You now have {hero.bounty} coins.")
+                else:
+                    print(f"You do not have enough coins to purchase {item.name}.")
         elif raw_input == "3":
             print("Goodbye.")
             break
         else:
             print("Invalid input {}".format(raw_input))
 
-        if goblin_health > 0:
-            # Goblin attacks hero
-            hero_health -= goblin_power
-            print("The goblin does {} damage to you.".format(goblin_power))
-            if hero_health <= 0:
+        if opponent.alive():
+            if hasattr(opponent, "can_recover"):
+                opponent.recovery()
+            opponent.attack(hero)
+            print(f"The {opponent.name} does {opponent.power} damage to you.\n")
+            if hero.health <= 0:
                 print("You are dead.")
 
 main()
