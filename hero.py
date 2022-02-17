@@ -32,4 +32,5 @@ class Hero(Character):
 
     def print_item_status(self):
         print(f"Armor: {self.armor}")
-        print(f"Agility: {self.evade + 1}\n")
+        print(f"Agility: {self.evade + 1}")
+        print(f"Shield: {self.shield}\n")

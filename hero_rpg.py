@@ -37,16 +37,18 @@ def store_visit(hero):
     item_index = get_item_index(store_input)
     if item_index < len(store_items):
         item = store_items[item_index]
-        store_purchase(item, hero)
-        update_hero_with_item(item, hero)
+        purchase_successful = store_purchase(item, hero)
+        if purchase_successful:
+            update_hero_with_item(item, hero)
 
 def store_purchase(item, hero):
     if hero.bounty >= item.cost:
         print(f"\nYou have purchased {item.name} for {item.cost} coins.")
         hero.bounty -= item.cost
         print(f"You now have {hero.bounty} coins.\n")
-    else:
-        print(f"\nYou do not have enough coins to purchase {item.name}.\n")
+        return True 
+    print(f"\nYou do not have enough coins to purchase {item.name}.\n")
+    return False
 
 def update_hero_with_item(item, hero):
     if item.name == "Armor":
