@@ -12,11 +12,14 @@ class Character():
     def attack(self, opponent):
         random_int = random.randint(1, opponent.agility + opponent.evade)
         if random_int == 1 and opponent.armor:
-            opponent.health -= self.power + 2
+            power = self.power - 2 if self.power - 2 >= 0 else 0
         elif random_int == 1 and not opponent.armor:
-            opponent.health -= self.power 
+            power = self.power 
         else:
+            power = 0
             print("Attack evaded!")
+        opponent.health -= power 
+        print(f"The {self.name} does {power} damage to you.\n")
 
     def alive(self):
         if self.health < 1:
@@ -24,34 +27,7 @@ class Character():
         return True 
 
     def print_status(self):
-        print(f"The {self.name} has {self.health} health and {self.power} power.")
-
-class Hero(Character):
-    def __init__(self, health=10, power=5, bounty=0, armor=0, evade=0):
-        super().__init__("Hero", health, power, bounty)
-        self.armor = armor 
-        self.evade = evade 
-
-    def attack(self, opponent):
-        power_int = random.randint(1, 5)
-        agility_int = random.randint(1, opponent.agility)
-        if power_int == 5 and agility_int == 1:
-            power = self.power * 2
-            print("\nSuper attack!")
-        elif agility_int == 1:
-            power = self.power
-        else: 
-            print("\nAttack evaded!")
-            power = 0
-        opponent.health -= power 
-        print(f"You do {power} damage to the {opponent.name}.\n")
-
-    def print_status(self):
-        print(f"You have {self.health} health and {self.power} power.")
-
-    def collect_bounty(self, opponent):
-        self.bounty += opponent.bounty
-        print(f"Bounty collected! Current amount of coins: {self.bounty}")
+        print(f"The {self.name} has {self.health} health.")
 
 class Goblin(Character):
     def __init__(self, health=6, power=2, bounty=5):
