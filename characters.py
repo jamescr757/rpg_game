@@ -11,7 +11,9 @@ class Character():
 
     def attack(self, opponent):
         random_int = random.randint(1, opponent.agility + opponent.evade)
-        if random_int == 1 and opponent.armor:
+        if random_int == 1 and opponent.armor and opponent.shield:
+            power = self.power - 3 if self.power - 3 >= 0 else 0
+        elif random_int == 1 and opponent.armor:
             power = self.power - 2 if self.power - 2 >= 0 else 0
         elif random_int == 1 and not opponent.armor:
             power = self.power 

@@ -10,7 +10,7 @@ What do you want to do?
 2. Visit Store
 3. Flee"""
 opponents = [Goblin(), Medic(), Shadow(), Zombie()]
-store_items = [Item("Super Tonic", 8), Item("Armor", 4), Item("Evade", 5)]
+store_items = [Item("Super Tonic", 8), Item("Armor", 4), Item("Evade", 5), Item("Sword", 6), Item("Shield", 2)]
 
 
 def select_opponent():
@@ -55,10 +55,10 @@ def update_hero_with_item(item, hero):
         hero.evade += 2
     elif item.name == "Super Tonic": 
         hero.health = 10 
-    elif item.name == "item4":
-        pass 
-    elif item.name == "item5": 
-        pass          
+    elif item.name == "Sword":
+        hero.power += 2 
+    elif item.name == "Shield": 
+        hero.shield = True          
      
 def main():
     hero = Hero()
