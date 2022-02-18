@@ -9,9 +9,9 @@ What do you want to do?
 1. Fight
 2. Visit Store
 3. Flee"""
-opponents = [Goblin(), Medic(), Shadow(), Wizard(), Zombie()]
-store_items = [Item("Super Tonic", 8), Item("Armor", 4), Item("Evade", 5), Item("Sword", 6), Item("Shield", 2)]
-heart_symbol = u'\u2764'
+opponents = [Cobra(), Goblin(), Medic(), Scythe(), Shadow(), Wizard(), Zombie()]
+store_items = [Item("Armor", 4), Item("Dagger", 2), Item("Evade", 5), Item("Shield", 2), Item("Super Tonic", 6), Item("Sword", 4)]
+playing = True
 
 
 def select_opponent():
@@ -51,18 +51,39 @@ def singular_or_plural(coin_number):
         return ""
     return "s"
 
+def check_current_items(name, hero):
+    if name == "Evade" or name == "Super Tonic":
+        return False 
+    elif name == "Armor":
+        return hero.armor 
+    elif name == "Shield":
+        return hero.shield
+    elif name == "Sword":
+        if hero.convert_sword(hero.power) == "Yes":
+            return True 
+    elif name == "Dagger":
+        if hero.convert_dagger(hero.power) == "Yes":
+            return True
+    return False 
+
 def store_purchase(item, hero):
-    if hero.bounty >= item.cost:
+    has_item = check_current_items(item.name, hero)
+    if hero.bounty >= item.cost and not has_item:
         print(f"\nYou have purchased {item.name} for {item.cost} coins.")
         hero.bounty -= item.cost
         print(f"You now have {hero.bounty} coin{singular_or_plural(hero.bounty)}.\n")
         return True 
-    print(f"\nYou do not have enough coins to purchase {item.name}.\n")
+    if has_item:
+        print(f"\nYou cannot purchase two {item.name}s.\n") 
+    else:
+        print(f"\nYou do not have enough coins to purchase {item.name}.\n")
     return False
 
 def update_hero_with_item(item, hero):
     if item.name == "Armor":
         hero.armor = True 
+    elif item.name == "Dagger":
+        hero.power += 1
     elif item.name == "Evade":
         hero.evade += 2
     elif item.name == "Super Tonic": 
@@ -72,45 +93,44 @@ def update_hero_with_item(item, hero):
     elif item.name == "Shield": 
         hero.shield = True        
      
+def battle(opponent, hero, opponent_index, number_of_lives):
+    while opponent.alive() and hero.alive():
+        hero.print_status()
+        opponent.print_status()
+        print(main_menu)
+        raw_input = input("> ")
+        if raw_input == "1":
+            hero.attack(opponent)
+            if not opponent.alive():
+                print(f"The {opponent.name} is dead.")
+                hero.collect_bounty(opponent)
+                remove_opponent(opponent_index)
+        elif raw_input == "2":
+            display_store_menu()
+            store_visit(hero)
+        elif raw_input == "3":
+            break
+        else:
+            print("Invalid input {}".format(raw_input))
+        if opponent.alive():
+            if hasattr(opponent, "can_recover"):
+                opponent.recovery()
+            opponent.attack(hero)
+            if hero.health <= 0:
+                print(f"You are dead.\nNumber of lives left: {number_of_lives - 1}\n")
+                return number_of_lives - 1
+    return number_of_lives
+
 def main():
     hero = Hero()
     number_of_lives = 3
-    # playing = True
     while opponents and number_of_lives > 0:
         opponent, opponent_index = select_opponent()
         if not hero.alive():
             hero = Hero(8, 4, 0)
             print("You have been stripped of your items and coins. The enemies are still out there...\n")
         print(f"Current opponent: The {opponent.name}\n")
-        while opponent.alive() and hero.alive():
-            hero.print_status()
-            opponent.print_status()
-            print(main_menu)
-            raw_input = input("> ")
-            if raw_input == "1":
-                hero.attack(opponent)
-                if not opponent.alive():
-                    print(f"The {opponent.name} is dead.")
-                    hero.collect_bounty(opponent)
-                    remove_opponent(opponent_index)
-            elif raw_input == "2":
-                display_store_menu()
-                store_visit(hero)
-            elif raw_input == "3":
-                # print("Goodbye.")
-                break
-            else:
-                print("Invalid input {}".format(raw_input))
-            if opponent.alive():
-                if hasattr(opponent, "can_recover"):
-                    opponent.recovery()
-                opponent.attack(hero)
-                if hero.health <= 0:
-                    number_of_lives -= 1
-                    print(f"You are dead.\nNumber of lives left: {number_of_lives}\n")
-        # continue_playing = input("\nDo you want to keep playing? (Y/N) ").lower()
-        # if continue_playing == "n" or continue_playing == "no":
-        #     playing = False
+        number_of_lives = battle(opponent, hero, opponent_index, number_of_lives)
     if not opponents:
         print("\nYOU WIN!\nYou killed all the enemies!\n")
     elif number_of_lives == 0:
@@ -119,5 +139,12 @@ def main():
         print("\nThanks for playing.\n")
 
 
-main()
+while playing:
+    main()
+    continue_playing = input("\nDo you want to play again? (Y/N) ").lower()
+    if continue_playing == "n" or continue_playing == "no":
+        playing = False
+    else:
+        opponents = [Cobra(), Goblin(), Medic(), Scythe(), Shadow(), Wizard(), Zombie()]
+        print("\nThe game has been reset.\n\n\n")
 

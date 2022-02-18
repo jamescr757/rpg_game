@@ -96,7 +96,7 @@ class Scythe(Character):
             print("\nAttack evaded!")
             power = 0
         opponent.health -= power 
-        print(f"The {self.name} does {power} damage to the {opponent.name}.\n")
+        print(f"The {self.name} does {power} damage to you.\n")
 
 # The Shadow evades attacks 90% of the time
 class Shadow(Character):
@@ -118,12 +118,12 @@ class Wizard(Character):
         opponent.health -= power 
         print(f"The {self.name} does {power} damage to you.\n")
 
-# The Zombie can live until -100 health points
+# The Zombie can live until -50 health points
 class Zombie(Character):
-    def __init__(self, health=1, power=3, bounty=10):
+    def __init__(self, health=0, power=3, bounty=10):
         super().__init__("Zombie", health, power, bounty)
 
     def alive(self):
-        if self.health <= -100:
+        if self.health <= -50:
             return False
         return True

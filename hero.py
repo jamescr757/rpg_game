@@ -21,7 +21,7 @@ class Hero(Character):
             print("\nAttack evaded!")
             power = 0
         opponent.health -= power 
-        print(f"You do {power} damage to the {opponent.name}.\n")
+        print(f"\nYou do {power} damage to the {opponent.name}.\n")
 
     def print_status(self):
         print(f"You have {self.health} health.")
@@ -30,7 +30,22 @@ class Hero(Character):
         self.bounty += opponent.bounty
         print(f"Bounty collected! Current amount of coins: {self.bounty}")
 
+    def convert_bool(self, variable):
+        return "Yes" if variable else "No"
+
+    def convert_sword(self, power_num):
+        if power_num == 6 or power_num == 7:
+            return "Yes"
+        return "No"
+    
+    def convert_dagger(self, power_num):
+        if power_num == 5 or power_num == 7:
+            return "Yes"
+        return "No"
+
     def print_item_status(self):
-        print(f"Armor: {self.armor}")
         print(f"Agility: {self.evade + 1}")
-        print(f"Shield: {self.shield}\n")
+        print(f"Armor: {self.convert_bool(self.armor)}")
+        print(f"Dagger: {self.convert_dagger(self.power)}")
+        print(f"Shield: {self.convert_bool(self.shield)}")
+        print(f"Sword: {self.convert_sword(self.power)}\n")
