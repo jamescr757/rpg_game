@@ -3,7 +3,7 @@ import random
 
 
 class Hero(Character):
-    def __init__(self, health=10, power=5, bounty=5, armor=0, evade=0, shield=0):
+    def __init__(self, health=10, power=4, bounty=5, armor=0, evade=0, shield=0):
         super().__init__("Hero", health, power, bounty)
         self.armor = armor 
         self.evade = evade 
