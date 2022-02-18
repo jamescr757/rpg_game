@@ -20,7 +20,12 @@ def select_opponent():
 
 def remove_opponent(index):
     del opponents[index]
-    print(f"\nThere are {len(opponents)} enemies left!")
+    if len(opponents) > 1:
+        print(f"\nThere are {len(opponents)} enemies left!")
+    elif len(opponents) == 1:
+        print(f"\nThere is 1 enemy left!")
+    else:
+        print(f"\nThere are no enemies left!")
 
 def display_store_menu():
     print("\nStore Items:")
@@ -66,17 +71,22 @@ def check_current_items(name, hero):
             return True
     return False 
 
+def add_an_a(name):
+    if name == "Sword" or name == "Dagger" or name == "Shield":
+        return "a "
+    return ""
+
 def store_purchase(item, hero):
     has_item = check_current_items(item.name, hero)
     if hero.bounty >= item.cost and not has_item:
-        print(f"\nYou have purchased {item.name} for {item.cost} coins.")
+        print(f"\nYou have purchased {add_an_a(item.name)}{item.name} for {item.cost} coins.")
         hero.bounty -= item.cost
         print(f"You now have {hero.bounty} coin{singular_or_plural(hero.bounty)}.\n")
         return True 
     if has_item:
         print(f"\nYou cannot purchase two {item.name}s.\n") 
     else:
-        print(f"\nYou do not have enough coins to purchase {item.name}.\n")
+        print(f"\nYou do not have enough coins to purchase {add_an_a(item.name)}{item.name}.\n")
     return False
 
 def update_hero_with_item(item, hero):
@@ -132,11 +142,9 @@ def main():
         print(f"Current opponent: The {opponent.name}\n")
         number_of_lives = battle(opponent, hero, opponent_index, number_of_lives)
     if not opponents:
-        print("\nYOU WIN!\nYou killed all the enemies!\n")
-    elif number_of_lives == 0:
-        print("\nNo more lives left! Please play again.\n")
+        print("\nYOU WIN!\n")
     else:
-        print("\nThanks for playing.\n")
+        print("\nNo more lives left! Please play again.\n")
 
 
 while playing:
