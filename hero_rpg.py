@@ -109,6 +109,7 @@ def battle(opponent, hero, opponent_index, number_of_lives):
         opponent.print_status()
         print(main_menu)
         raw_input = input("> ")
+        print() 
         if raw_input == "1":
             hero.attack(opponent)
             if not opponent.alive():
@@ -144,7 +145,7 @@ def main():
     if not opponents:
         print("\nYOU WIN!\n")
     else:
-        print("\nNo more lives left! Please play again.\n")
+        print("\nNo more lives left! You lose!\n")
 
 
 while playing:

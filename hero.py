@@ -21,7 +21,7 @@ class Hero(Character):
             print("\nAttack evaded!")
             power = 0
         opponent.health -= power 
-        print(f"\nYou do {power} damage to the {opponent.name}.\n")
+        print(f"You do {power} damage to the {opponent.name}.\n")
 
     def print_status(self):
         print(f"You have {self.health} health.")
