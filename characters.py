@@ -45,6 +45,7 @@ class Cobra(Character):
             print("You have been attacked with venom!")
         else:
             power = 0
+            print("Attack evaded!")
         opponent.health -= power
         print(f"The {self.name} does {power} damage to you.\n")
 
