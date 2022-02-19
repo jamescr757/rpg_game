@@ -49,9 +49,9 @@ class Cobra(Character):
         opponent.health -= power
         print(f"The {self.name} does {power} damage to you.\n")
 
-# The Goblin evades attacks 50% of the time
+# The Goblin evades attacks 33% of the time
 class Goblin(Character):
-    def __init__(self, health=6, power=4, bounty=5, agility=2):
+    def __init__(self, health=6, power=4, bounty=5, agility=3):
         super().__init__("Goblin", health, power, bounty, agility)
 
 # The Medic can recover 3 health points 20% of the time 
